@@ -1,0 +1,513 @@
+{
+  "api": {
+    "name": "CapacitorScreenOrientationPlugin",
+    "slug": "capacitorscreenorientationplugin",
+    "docs": "Capacitor Screen Orientation Plugin interface.\n\nProvides methods to detect and control screen orientation,\nwith support for detecting true physical device orientation using motion sensors.",
+    "tags": [
+      {
+        "text": "1.0.0",
+        "name": "since"
+      }
+    ],
+    "methods": [
+      {
+        "name": "orientation",
+        "signature": "() => Promise<ScreenOrientationResult>",
+        "parameters": [],
+        "returns": "Promise<ScreenOrientationResult>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves with the current orientation."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\nconst result = await ScreenOrientation.orientation();\nconsole.log('Current orientation:', result.type);\n```"
+          }
+        ],
+        "docs": "Get the current screen orientation.\n\nReturns the current orientation of the device screen.",
+        "complexTypes": [
+          "ScreenOrientationResult"
+        ],
+        "slug": "orientation"
+      },
+      {
+        "name": "lock",
+        "signature": "(options: OrientationLockOptions) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "Options for locking the orientation.",
+            "type": "OrientationLockOptions"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "param",
+            "text": "options Options for locking the orientation."
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves when the orientation is locked."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\n// Standard lock\nawait ScreenOrientation.lock({ orientation: 'landscape' });\n\n// Lock with motion tracking on iOS\nawait ScreenOrientation.lock({\n  orientation: 'portrait',\n  bypassOrientationLock: true\n});\n```"
+          }
+        ],
+        "docs": "Lock the screen orientation to a specific type.\n\nLocks the screen to the specified orientation.\nOn iOS, if bypassOrientationLock is true, it will also start\ntracking physical device orientation using motion sensors.\n\nNote: The UI will still respect the user's orientation lock setting.\nMotion tracking allows you to detect how the device is physically held\neven when the UI doesn't rotate.",
+        "complexTypes": [
+          "OrientationLockOptions"
+        ],
+        "slug": "lock"
+      },
+      {
+        "name": "unlock",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves when the orientation is unlocked."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\nawait ScreenOrientation.unlock();\n```"
+          }
+        ],
+        "docs": "Unlock the screen orientation.\n\nAllows the screen to rotate freely based on device position.\nAlso stops any motion-based orientation tracking if it was enabled.",
+        "complexTypes": [],
+        "slug": "unlock"
+      },
+      {
+        "name": "startOrientationTracking",
+        "signature": "(options?: StartOrientationTrackingOptions | undefined) => Promise<void>",
+        "parameters": [
+          {
+            "name": "options",
+            "docs": "Options for starting orientation tracking.",
+            "type": "StartOrientationTrackingOptions | undefined"
+          }
+        ],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "param",
+            "text": "options Options for starting orientation tracking."
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves when tracking starts."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\nawait ScreenOrientation.startOrientationTracking({\n  bypassOrientationLock: true\n});\n\n// Listen for changes\nScreenOrientation.addListener('screenOrientationChange', (result) => {\n  console.log('Orientation changed:', result.type);\n});\n```"
+          }
+        ],
+        "docs": "Start tracking device orientation using motion sensors.\n\nThis method is useful when you want to track the device's physical\norientation independently from the screen orientation lock.\nIt uses Core Motion on iOS to detect orientation changes.",
+        "complexTypes": [
+          "StartOrientationTrackingOptions"
+        ],
+        "slug": "startorientationtracking"
+      },
+      {
+        "name": "stopOrientationTracking",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves when tracking stops."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\nawait ScreenOrientation.stopOrientationTracking();\n```"
+          }
+        ],
+        "docs": "Stop tracking device orientation using motion sensors.\n\nStops the motion-based orientation tracking if it was started.",
+        "complexTypes": [],
+        "slug": "stoporientationtracking"
+      },
+      {
+        "name": "isOrientationLocked",
+        "signature": "() => Promise<OrientationLockStatusResult>",
+        "parameters": [],
+        "returns": "Promise<OrientationLockStatusResult>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves with the lock status."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\n// Start motion tracking first\nawait ScreenOrientation.startOrientationTracking({\n  bypassOrientationLock: true\n});\n\n// Check lock status\nconst status = await ScreenOrientation.isOrientationLocked();\nif (status.locked) {\n  console.log('Orientation lock is ON');\n  console.log('Physical:', status.physicalOrientation);\n  console.log('UI:', status.uiOrientation);\n}\n```"
+          }
+        ],
+        "docs": "Check if device orientation lock is currently enabled.\n\nThis method compares the physical device orientation (from motion sensors)\nwith the UI orientation. If they differ, orientation lock is enabled.\n\nNote: This requires motion tracking to be active via\nstartOrientationTracking() or lock() with bypassOrientationLock: true.\nWorks on both iOS (Core Motion) and Android (Accelerometer).",
+        "complexTypes": [
+          "OrientationLockStatusResult"
+        ],
+        "slug": "isorientationlocked"
+      },
+      {
+        "name": "addListener",
+        "signature": "(eventName: 'screenOrientationChange', listenerFunc: (result: ScreenOrientationResult) => void) => Promise<PluginListenerHandle>",
+        "parameters": [
+          {
+            "name": "eventName",
+            "docs": "The event name. Must be 'screenOrientationChange'.",
+            "type": "'screenOrientationChange'"
+          },
+          {
+            "name": "listenerFunc",
+            "docs": "Callback function invoked when orientation changes.",
+            "type": "(result: ScreenOrientationResult) => void"
+          }
+        ],
+        "returns": "Promise<PluginListenerHandle>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "param",
+            "text": "eventName The event name. Must be 'screenOrientationChange'."
+          },
+          {
+            "name": "param",
+            "text": "listenerFunc Callback function invoked when orientation changes."
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves to a listener handle."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\nconst listener = await ScreenOrientation.addListener(\n  'screenOrientationChange',\n  (result) => {\n    console.log('New orientation:', result.type);\n  }\n);\n\n// To remove the listener:\nawait listener.remove();\n```"
+          }
+        ],
+        "docs": "Listen for screen orientation changes.\n\nRegisters a listener that will be called whenever the screen orientation changes.\nIf motion-based tracking is enabled, this will also fire for orientation changes\ndetected by motion sensors even when orientation lock is enabled.",
+        "complexTypes": [
+          "PluginListenerHandle",
+          "ScreenOrientationResult"
+        ],
+        "slug": "addlistenerscreenorientationchange-"
+      },
+      {
+        "name": "removeAllListeners",
+        "signature": "() => Promise<void>",
+        "parameters": [],
+        "returns": "Promise<void>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves when all listeners are removed."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\nawait ScreenOrientation.removeAllListeners();\n```"
+          }
+        ],
+        "docs": "Remove all listeners for this plugin.\n\nRemoves all registered event listeners.",
+        "complexTypes": [],
+        "slug": "removealllisteners"
+      },
+      {
+        "name": "getPluginVersion",
+        "signature": "() => Promise<{ version: string; }>",
+        "parameters": [],
+        "returns": "Promise<{ version: string; }>",
+        "tags": [
+          {
+            "name": "since",
+            "text": "1.0.0"
+          },
+          {
+            "name": "returns",
+            "text": "A promise that resolves with the version string."
+          },
+          {
+            "name": "example",
+            "text": "```typescript\nconst { version } = await ScreenOrientation.getPluginVersion();\nconsole.log('Plugin version:', version);\n```"
+          }
+        ],
+        "docs": "Get the native plugin version.\n\nReturns the current version of the native plugin implementation.",
+        "complexTypes": [],
+        "slug": "getpluginversion"
+      }
+    ],
+    "properties": []
+  },
+  "interfaces": [
+    {
+      "name": "ScreenOrientationResult",
+      "slug": "screenorientationresult",
+      "docs": "Result returned by the orientation() method.",
+      "tags": [
+        {
+          "text": "1.0.0",
+          "name": "since"
+        }
+      ],
+      "methods": [],
+      "properties": [
+        {
+          "name": "type",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "The current orientation type.",
+          "complexTypes": [
+            "OrientationType"
+          ],
+          "type": "OrientationType"
+        }
+      ]
+    },
+    {
+      "name": "OrientationLockOptions",
+      "slug": "orientationlockoptions",
+      "docs": "Options for locking the screen orientation.",
+      "tags": [
+        {
+          "text": "1.0.0",
+          "name": "since"
+        }
+      ],
+      "methods": [],
+      "properties": [
+        {
+          "name": "orientation",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "The orientation type to lock to.",
+          "complexTypes": [
+            "OrientationLockType"
+          ],
+          "type": "OrientationLockType"
+        },
+        {
+          "name": "bypassOrientationLock",
+          "tags": [
+            {
+              "text": "false",
+              "name": "default"
+            },
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Whether to track physical device orientation using motion sensors.\nWhen true, uses device motion sensors to detect the true physical\norientation of the device, even when the device orientation lock is enabled.\n\n**Important:** This does NOT bypass the UI orientation lock.\nThe screen will still respect the user's orientation lock setting.\nThis option only affects orientation detection/tracking - you'll receive\norientation change events based on how the device is physically held,\nbut the UI will not rotate if orientation lock is enabled.\n\nSupported on iOS (Core Motion) and Android (Accelerometer).",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        }
+      ]
+    },
+    {
+      "name": "StartOrientationTrackingOptions",
+      "slug": "startorientationtrackingoptions",
+      "docs": "Options for starting orientation tracking using motion sensors.",
+      "tags": [
+        {
+          "text": "1.0.0",
+          "name": "since"
+        }
+      ],
+      "methods": [],
+      "properties": [
+        {
+          "name": "bypassOrientationLock",
+          "tags": [
+            {
+              "text": "false",
+              "name": "default"
+            },
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Whether to track physical device orientation using motion sensors.\nWhen true, uses device motion sensors to detect the true physical\norientation of the device, even when the device orientation lock is enabled.\n\n**Important:** This does NOT bypass the UI orientation lock.\nThis only enables detection of the physical orientation.\n\nSupported on iOS (Core Motion) and Android (Accelerometer).",
+          "complexTypes": [],
+          "type": "boolean | undefined"
+        }
+      ]
+    },
+    {
+      "name": "OrientationLockStatusResult",
+      "slug": "orientationlockstatusresult",
+      "docs": "Result returned by the isOrientationLocked() method.",
+      "tags": [
+        {
+          "text": "1.0.0",
+          "name": "since"
+        }
+      ],
+      "methods": [],
+      "properties": [
+        {
+          "name": "locked",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "Whether the device orientation lock is currently enabled.\n\nThis is determined by comparing the physical device orientation\n(from motion sensors) with the UI orientation. If they differ,\norientation lock is enabled.\n\nAvailable on iOS (Core Motion) and Android (Accelerometer) when motion tracking is active.",
+          "complexTypes": [],
+          "type": "boolean"
+        },
+        {
+          "name": "physicalOrientation",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "The physical orientation of the device from motion sensors.\nAvailable when motion tracking is active (iOS and Android).",
+          "complexTypes": [
+            "OrientationType"
+          ],
+          "type": "OrientationType"
+        },
+        {
+          "name": "uiOrientation",
+          "tags": [
+            {
+              "text": "1.0.0",
+              "name": "since"
+            }
+          ],
+          "docs": "The current UI orientation reported by the system.",
+          "complexTypes": [
+            "OrientationType"
+          ],
+          "type": "OrientationType"
+        }
+      ]
+    },
+    {
+      "name": "PluginListenerHandle",
+      "slug": "pluginlistenerhandle",
+      "docs": "",
+      "tags": [],
+      "methods": [],
+      "properties": [
+        {
+          "name": "remove",
+          "tags": [],
+          "docs": "",
+          "complexTypes": [],
+          "type": "() => Promise<void>"
+        }
+      ]
+    }
+  ],
+  "enums": [],
+  "typeAliases": [
+    {
+      "name": "OrientationType",
+      "slug": "orientationtype",
+      "docs": "Orientation type that describes the orientation state of the device.",
+      "types": [
+        {
+          "text": "'portrait-primary'",
+          "complexTypes": []
+        },
+        {
+          "text": "'portrait-secondary'",
+          "complexTypes": []
+        },
+        {
+          "text": "'landscape-primary'",
+          "complexTypes": []
+        },
+        {
+          "text": "'landscape-secondary'",
+          "complexTypes": []
+        }
+      ]
+    },
+    {
+      "name": "OrientationLockType",
+      "slug": "orientationlocktype",
+      "docs": "Orientation lock type that can be used to lock the device orientation.",
+      "types": [
+        {
+          "text": "'any'",
+          "complexTypes": []
+        },
+        {
+          "text": "'natural'",
+          "complexTypes": []
+        },
+        {
+          "text": "'landscape'",
+          "complexTypes": []
+        },
+        {
+          "text": "'portrait'",
+          "complexTypes": []
+        },
+        {
+          "text": "'portrait-primary'",
+          "complexTypes": []
+        },
+        {
+          "text": "'portrait-secondary'",
+          "complexTypes": []
+        },
+        {
+          "text": "'landscape-primary'",
+          "complexTypes": []
+        },
+        {
+          "text": "'landscape-secondary'",
+          "complexTypes": []
+        }
+      ]
+    }
+  ],
+  "pluginConfigs": []
+}
