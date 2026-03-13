@@ -2,8 +2,8 @@
   "name": "@capgo/capacitor-screen-orientation",
   "version": "8.1.12",
   "description": "Screen orientation plugin with support for bypassing orientation lock",
-  "main": "dist/plugin.cjs.js",
-  "module": "dist/plugin.cjs.js",
+  "main": "dist/plugin.js",
+  "module": "dist/plugin.js",
   "types": "dist/esm/index.d.ts",
   "unpkg": "dist/plugin.js",
   "files": [
